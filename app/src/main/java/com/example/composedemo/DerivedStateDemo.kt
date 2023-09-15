@@ -5,9 +5,11 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -55,10 +57,10 @@ fun MessageList(items: List<Int>) {
 
         val coroutineScope = rememberCoroutineScope()
 
-        LazyColumn(state = listState) {
+        LazyColumn(state = listState, modifier = Modifier.fillMaxWidth()) {
             itemsIndexed(items) { index, item ->
-                Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                    Text(text = item.toString(), style = MaterialTheme.typography.bodyMedium)
+                Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).fillMaxWidth()) {
+                    Text(text = item.toString(), style = MaterialTheme.typography.headlineMedium, modifier = Modifier.fillMaxWidth())
                 }
             }
         }
@@ -68,14 +70,14 @@ fun MessageList(items: List<Int>) {
         // minimize unnecessary compositions
         val showButton by remember {
             derivedStateOf {
-                listState.firstVisibleItemIndex > 5
+                listState.firstVisibleItemIndex > 0
             }
         }
 
         AnimatedVisibility(
             visible = showButton,
             enter = fadeIn() + expandVertically(),
-            exit = fadeOut() + shrinkHorizontally(),
+            exit = fadeOut() + shrinkVertically(),
             modifier = Modifier.align(Alignment.BottomEnd).padding(18.dp)
         ) {
             FloatingActionButton(
